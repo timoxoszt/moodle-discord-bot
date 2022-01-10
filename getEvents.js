@@ -2,9 +2,21 @@ import ICAL from 'ical.js';
 import fetch from 'node-fetch';
 
 class Calendar {
+    #events;
+    #MOODLE_ID = process.env.MOODLE_ID;
+    #MOODLE_PASSWORD = process.env.MOODLE_PASSWORD;
+    #MOODLE_TOKEN = process.env.MOODLE_TOKEN;
+    #url = `https://moodle.univ-ubs.fr/calendar/export_execute.php?userid=102622&authtoken=${this.#MOODLE_TOKEN}&preset_what=all`;
+
     constructor() {
-        this.url = `https://moodle.univ-ubs.fr/calendar/export_execute.php?userid=102622&authtoken=c828b9bdec801049ec6887ec17f81db25c69695e&preset_what=all&preset_time=monthnow`;
-        this.empty = true;
+    }
+
+    get events() {
+        return this.empty ? {name: "Rendu", value: "Pas de rendus pour cette semaine", inline: true} : this.#events;
+    }
+
+    get empty() {
+        return this.#events.length === 0;
     }
 
     /**
@@ -19,22 +31,35 @@ class Calendar {
     }
 
     async fetch_week() {
-        let response = await fetch(this.url);
+        let url = this.#url + "&preset_time=weeknow";
+        await this.fetch_events(url);
+    }
+
+    async fetch_month() {
+        let url = this.#url + "&preset_time=monthnow";
+        await this.fetch_events(url);
+    }
+
+    async fetch_events(url) {
+        let response = await fetch(url);
         let data = await response.text();
         this.calendarData = ICAL.parse(data);
         this.calendar = new ICAL.Component(this.calendarData);
 
-        this.events = [];
+        this.#events = [];
         let eventsData = this.calendar.getAllSubcomponents("vevent");
         eventsData.forEach(eventData => {
             let event = new ICAL.Event(eventData);
-            this.events.push({
+            let days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+            let months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            let d = new Date(event.endDate);
+            let date = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getHours()}:${d.getMinutes()}`;
+            this.#events.push({
                 name: eventData.jCal["1"]["8"]["3"] === undefined ? "R1.0x - xx" : eventData.jCal["1"]["8"]["3"],
-                value: event.summary,
+                value: `*${event.summary}*\n**${date}**`,
                 inline: true
             });
         });
-        this.empty = this.events.length === 0;
     }
 
     week_events() {

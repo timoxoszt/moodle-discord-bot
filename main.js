@@ -1,7 +1,8 @@
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
+import {REST} from '@discordjs/rest';
+import {Routes} from 'discord-api-types/v9';
 import Calendar from './getEvents.js';
-import {Client, Intents, MessageAttachment, MessageEmbed} from 'discord.js';
+import {Client, Intents, MessageEmbed} from 'discord.js';
+
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const GUILD_ID = "927943017468416030";
@@ -10,18 +11,45 @@ const TOKEN = process.env.DISCORD_TOKEN;
 
 const commands = [
     {
-        name: 'ping',
-        description: 'Replies with Pong!'
-    },
-    {
+        name: 'help',
+        description: "Voir la page d'aide"
+    }, {
         name: 'mois',
-        description: 'Voir les rendus pour la mois'
-    },
-    {
-        name: 'salepute',
-        description: "Âmes sensibles s'abstenir"
+        description: 'Voir les rendus pour le mois'
+    }, {
+        name: 'semaine',
+        description: 'Voir les rendus pour la semaine'
+    }, {
+        name: 'video',
+        description: "Ames sensibles s'abstenir"
     }
 ];
+
+/**
+ * Fetch and format upcoming events
+ * @param timeframe "week" or "month"
+ * @returns {Promise<MessageEmbed>} MessageEmbed object to directly send to discord
+ */
+async function createEventsEmbeds(timeframe) {
+    let calendar = await new Calendar;
+
+    switch (timeframe) {
+        case "week":
+            await calendar.fetch_week();
+            break;
+        case "month":
+            await calendar.fetch_month();
+            break;
+    }
+
+    return new MessageEmbed()
+        .setColor('#f58820')
+        .setTitle(`Rendus pour la semaine ${calendar.week_number()}`)
+        .setURL('https://moodle.univ-ubs.fr/')
+        .setThumbnail('https://ozna.me/moodle_logo.png')
+        .addFields(calendar.events)
+        .setTimestamp();
+}
 
 
 client.on('ready', () => {
@@ -29,23 +57,63 @@ client.on('ready', () => {
 });
 
 client.on('interactionCreate', async interaction => {
+    let res;
+
     if (!interaction.isCommand()) return;
 
-    if (interaction.commandName === 'ping') {
+    switch (interaction.commandName) {
+        case "help":
+            let msg = [];
+            commands.forEach(command => {
+                msg.push({
+                    name: `\`${command.name}\``,
+                    value: command.description,
+                    inline: true
+                });
+            })
+            res = new MessageEmbed()
+                .setColor('#f58820')
+                .setTitle("Page d'aide")
+                .setDescription(`Vous avez ${commands.length} commandes à votre disposition :`)
+                .setURL('https://github.com/finxol/moodisc')
+                .setThumbnail('https://ozna.me/moodle_logo.png')
+                .addFields(msg)
+                .setTimestamp();
+            await interaction.reply({ embeds: [res] });
+            break;
+
+        case "mois":
+            res = await createEventsEmbeds("month");
+            await interaction.reply({ embeds: [res] });
+            break;
+
+        case "semaine":
+            res = await createEventsEmbeds("week");
+            await interaction.reply({ embeds: [res] });
+            break;
+
+        case "video":
+            let min = Math.ceil(10);
+            let max = Math.floor(212);
+            let i = Math.floor(Math.random() * (max - min) + min);
+            await interaction.reply({
+                files: [{
+                    attachment: `http://salepute.fr/${i}.mp4`
+                }]
+            });
+            break;
+        default:
+            break;
+    }
+    /*if (interaction.commandName === 'ping') {
         await interaction.reply('Pong!');
 
     } else if (interaction.commandName === 'mois') {
-        let calendar = await new Calendar;
-        await calendar.fetch_week();
-        let fields = calendar.empty ? {name: "Rendu", value: "Pas de rendus pour cette semaine", inline: true} : calendar.events;
-        const res = new MessageEmbed()
-                .setColor('#f58820')
-                .setTitle(`Rendus pour la semaine ${calendar.week_number()}`)
-                .setURL('https://moodle.univ-ubs.fr/')
-                .setThumbnail('https://moodle.univ-ubs.fr/theme/image.php/classic/theme/1641688987/favicon')
-                .addFields(fields)
-                .setTimestamp()
+        let res = await createEventsEmbeds("month");
+        await interaction.reply({ embeds: [res] });
 
+    } else if (interaction.commandName === 'semaine') {
+        let res = await createEventsEmbeds("week");
         await interaction.reply({ embeds: [res] });
 
     } else if (interaction.commandName === 'salepute') {
@@ -57,7 +125,7 @@ client.on('interactionCreate', async interaction => {
                 attachment: `http://salepute.fr/${i}.mp4`
             }]
         });
-    }
+    }*/
 });
 
 client.login(TOKEN);
