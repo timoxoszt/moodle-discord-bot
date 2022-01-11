@@ -1,13 +1,15 @@
 # Moodisc
 Discord bot for moodle
 
-<img src="img/moodisc.png" width="50%" alt="Logo">
+<img src="img/moodisc.png" width="30%" alt="Logo">
 
 ## Available commands
 
 - `/help`: See a help page listing all available commands. Dynamically generated.
 - `/mois`: See all upcoming events for the next month.
 - `/semaine`: See all upcoming events for the next week
+
+<img src="img/moodisc_example.png">
 
 ## Setup
 
