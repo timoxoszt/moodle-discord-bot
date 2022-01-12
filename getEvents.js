@@ -74,7 +74,8 @@ class Calendar {
             let days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
             let months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
             let d = new Date(event.endDate);
-            let date = `${days[d.getDay() -1]} ${d.getDate()} ${months[d.getMonth()]} ${d.getHours()}:${d.getMinutes()}`;
+	    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let date = d.toLocaleDateString('fr-FR', options);
             this.#events.push({
                 name: eventData.jCal["1"]["8"]["3"] === undefined ? "R1.0x - xx" : eventData.jCal["1"]["8"]["3"],
                 value: `*${event.summary}*\n**${date}**`,
