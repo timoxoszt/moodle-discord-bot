@@ -71,16 +71,18 @@ class Calendar {
         let eventsData = this.calendar.getAllSubcomponents("vevent");
         eventsData.forEach(eventData => {
             let event = new ICAL.Event(eventData);
-            let days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-            let months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
             let d = new Date(event.endDate);
-	    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            let date = d.toLocaleDateString('fr-FR', options);
-            this.#events.push({
-                name: eventData.jCal["1"]["8"]["3"] === undefined ? "R1.0x - xx" : eventData.jCal["1"]["8"]["3"],
-                value: `*${event.summary}*\n**${date}**`,
-                inline: true
-            });
+
+            if (d > Date.now()) { // Filter out passed events
+                let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                let date = d.toLocaleDateString('fr-FR', options);
+                let time = d.toLocaleTimeString('fr-FR').split(':');
+                this.#events.push({
+                    name: eventData.jCal["1"]["8"]["3"] === undefined ? "R1.0x - xx" : eventData.jCal["1"]["8"]["3"],
+                    value: `*${event.summary}*\n**${date} ${time[0]}:${time[1]}**`,
+                    inline: true
+                });
+            }
         });
     }
 }
