@@ -2,11 +2,26 @@ import ICAL from 'ical.js';
 import fetch from 'node-fetch';
 
 class Calendar {
-    #events;
-    #MOODLE_ID = process.env.MOODLE_ID;
-    #MOODLE_PASSWORD = process.env.MOODLE_PASSWORD;
+    /**
+     * List containing all the parsed events
+     * @type {Array}
+     */
+    #events = [];
+    /**
+     * Token to use to authenticate to moodle
+     * @type {string}
+     */
     #MOODLE_TOKEN = process.env.MOODLE_TOKEN;
-    #url = `https://moodle.univ-ubs.fr/calendar/export_execute.php?userid=102622&authtoken=${this.#MOODLE_TOKEN}&preset_what=all`;
+    /**
+     * Id of the Moodle account to use
+     * @type {string}
+     */
+    #MOODLE_ID = process.env.MOODLE_ID;
+    /**
+     * Url for the calendar export on Moodle
+     * @type {string}
+     */
+    #url = `https://moodle.univ-ubs.fr/calendar/export_execute.php?userid=${this.#MOODLE_ID}&authtoken=${this.#MOODLE_TOKEN}&preset_what=all`;
 
     constructor() {
     }
