@@ -4,3 +4,6 @@
 # forever logs
 out.log
 err.log
+
+# init script
+init.sh
