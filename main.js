@@ -19,9 +19,6 @@ const commands = [
     }, {
         name: 'semaine',
         description: 'Voir les rendus pour la semaine'
-    }, {
-        name: 'video',
-        description: "Ames sensibles s'abstenir"
     }
 ];
 
@@ -54,7 +51,7 @@ async function createEventsEmbeds(timeframe) {
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    client.user.setActivity('Moodle', { type: 'WATCHING' });
+    client.user.setActivity('Moodle/m', { type: 'WATCHING' });
 });
 
 client.on('interactionCreate', async interaction => {
@@ -93,40 +90,9 @@ client.on('interactionCreate', async interaction => {
             await interaction.reply({ embeds: [res] });
             break;
 
-        case "video":
-            let min = Math.ceil(10);
-            let max = Math.floor(212);
-            let i = Math.floor(Math.random() * (max - min) + min);
-            await interaction.reply({
-                files: [{
-                    attachment: `http://salepute.fr/${i}.mp4`
-                }]
-            });
-            break;
         default:
             break;
     }
-    /*if (interaction.commandName === 'ping') {
-        await interaction.reply('Pong!');
-
-    } else if (interaction.commandName === 'mois') {
-        let res = await createEventsEmbeds("month");
-        await interaction.reply({ embeds: [res] });
-
-    } else if (interaction.commandName === 'semaine') {
-        let res = await createEventsEmbeds("week");
-        await interaction.reply({ embeds: [res] });
-
-    } else if (interaction.commandName === 'salepute') {
-        let min = Math.ceil(10);
-        let max = Math.floor(212);
-        let i = Math.floor(Math.random() * (max - min) + min);
-        await interaction.reply({
-            files: [{
-                attachment: `http://salepute.fr/${i}.mp4`
-            }]
-        });
-    }*/
 });
 
 client.login(TOKEN);
