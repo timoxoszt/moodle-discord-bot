@@ -9,7 +9,7 @@ Discord bot for moodle
 - `/mois`: See all upcoming events for the next month.
 - `/semaine`: See all upcoming events for the next week
 
-<img src="img/moodisc_example.png">
+<img src="img/moodisc_example.png" alt="example">
 
 ## Setup
 
@@ -23,6 +23,7 @@ Then get your discord and moodle tokens, and add them to your environnement
 ```bash
 export DISCORD_TOKEN=<your discord token here>
 export MOODLE_TOKEN=<your moodle token here>
+export MOODLE_ID=<your moodle account id here>
 ```
 
 You may also change the url for your moodle website in `getEvents.js`.
@@ -35,6 +36,6 @@ npm run dev
 If you want it to run continuously in the background and have [forever](https://www.npmjs.com/package/forever) installed,
 you can directly start the forever process with
 ```bash
-npm run start
+npm start
 ```
 The `restart` and `stop` scripts are also available for easily managing the process.
