@@ -51,7 +51,7 @@ async function createEventsEmbeds(timeframe) {
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    client.user.setActivity('Moodle/m', { type: 'WATCHING' });
+    client.user.setActivity('Moodle', { type: 'WATCHING' });
 });
 
 client.on('interactionCreate', async interaction => {
