@@ -21,7 +21,7 @@ class Calendar {
      * Url for the calendar export on Moodle
      * @type {string}
      */
-    #url = `https://moodle.univ-ubs.fr/calendar/export_execute.php?userid=${this.#MOODLE_ID}&authtoken=${this.#MOODLE_TOKEN}&preset_what=all`;
+    #url = `https://moodle.univ-ubs.fr/calendar/export_execute.php?userid=${this.#MOODLE_ID}&authtoken=${this.#MOODLE_TOKEN}&preset_what=all&preset_time=recentupcoming`;
 
     constructor() {
     }
@@ -58,8 +58,9 @@ class Calendar {
      * @returns {Promise<void>} none
      */
     async fetch_week() {
-        let url = this.#url + "&preset_time=weeknow";
-        await this.fetch_events(url);
+        let now = new Date();
+        let then = new Date(now.getTime() + 604800000); // now + 1 week in millisec
+        await this.fetch_events(this.#url, then);
     }
 
     /**
@@ -67,16 +68,18 @@ class Calendar {
      * @returns {Promise<void>}
      */
     async fetch_month() {
-        let url = this.#url + "&preset_time=monthnow";
-        await this.fetch_events(url);
+        let now = new Date();
+        let then = new Date(now.getTime() + 2419200000); // now + 4 weeks in millisec
+        await this.fetch_events(this.#url, then);
     }
 
     /**
      * Fetch all the events from a given url and parse them into a discord embed usable format
      * @param url url from which to get the events
+     * @param then timeframe within which the events have to be
      * @returns {Promise<void>} none
      */
-    async fetch_events(url) {
+    async fetch_events(url, then) {
         let response = await fetch(url);
         let data = await response.text();
         this.calendarData = ICAL.parse(data);
@@ -87,8 +90,9 @@ class Calendar {
         eventsData.forEach(eventData => {
             let event = new ICAL.Event(eventData);
             let d = new Date(event.endDate);
+            let now = new Date();
 
-            if (d > Date.now()) { // Filter out passed events
+            if (now < d && d < then) { // Filter out passed events and future events
                 let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 let date = d.toLocaleDateString('fr-FR', options);
                 let time = d.toLocaleTimeString('fr-FR').split(':');
