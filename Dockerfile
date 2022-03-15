@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:latest-alpine
+FROM node:16.14.0-alpine
 
 # create destination directory
 RUN mkdir -p /usr/src/moodisc
@@ -13,4 +13,4 @@ COPY package.json /usr/src/moodisc
 COPY . /usr/src/moodisc
 RUN npm install
 
-CMD [ "npm", "dev" ]
+CMD [ "npm", "run", "dev" ]
