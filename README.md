@@ -13,6 +13,13 @@ Discord bot for moodle
 
 ## Setup
 
+There are 2 options for deploying moodisc:
+
+1. [Bare Metal](#bare-metal)
+2. [Docker](#docker)
+
+### Bare metal
+
 First, clone this repository, `cd` into it and install dependencies
 ```bash
 git clone https://github.com.finxol/moodisc
@@ -39,3 +46,32 @@ you can directly start the forever process with
 npm start
 ```
 The `restart` and `stop` scripts are also available for easily managing the process.
+
+
+### Docker
+
+To deploy with docker, you need to install `podman` (or `docker` but the scripts work with podman)
+
+Create a file called `.env` in which you will enter your discord and moodle details. *Don't include quotes*
+
+```bash
+DISCORD_TOKEN=<your discord token here>
+MOODLE_TOKEN=<your moodle token here>
+MOODLE_ID=<your moodle account id here>
+```
+
+Then you can simply use the npm scripts provided to build and run with podman
+
+```bash
+npm run docker
+```
+
+*You can also only build with `npm run docker:build` or only run with `npm run docker:run`.*
+
+Once the build and run processes have finished, check everything is running smoothly with `podman ps`.
+You should get an output like this:
+
+```bash
+CONTAINER ID  IMAGE                     COMMAND      CREATED       STATUS             PORTS       NAMES
+b5d7fbde9ab2  localhost/moodisc:latest  npm run dev  1 minute ago  Up 1 minute ago                moodisc
+```
