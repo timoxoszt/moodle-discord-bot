@@ -10,7 +10,10 @@
     "start": "forever start -o out.log -e err.log main.js",
     "restart": "npm run stop && npm run start",
     "stop": "forever stop main.js",
-    "init": ". ./init.sh"
+    "init": ". ./.env",
+	"docker": "npm run docker:build && npm run docker:run",
+	"docker:build": "podman build -t moodisc .",
+	"docker:run": "podman run -d --env-file=\".env\" --name=\"iucovoitdb\" moodisc"
   },
   "keywords": ["discord", "moodle"],
   "author": "Colin Ozanne <conact@colinozanne.fr>",
