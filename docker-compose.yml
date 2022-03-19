@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  moodisc:
+    image: registry.ozna.me/moodisc:main
+    container_name: moodisc
+    restart: always
+    env_file:
+      - .env
+
