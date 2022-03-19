@@ -13,4 +13,9 @@ COPY package.json /usr/src/moodisc
 COPY . /usr/src/moodisc
 RUN npm install
 
+# change timezone
+RUN apk add --no-cache tzdata
+ENV TZ=Europe/Paris
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 CMD [ "npm", "run", "dev" ]
