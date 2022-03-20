@@ -2,7 +2,7 @@ version: '3'
 
 services:
   moodisc:
-    image: registry.ozna.me/moodisc:main
+    image: registry.ozna.me/moodisc:latest
     container_name: moodisc
     restart: always
     env_file:
