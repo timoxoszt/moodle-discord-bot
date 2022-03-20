@@ -51,7 +51,7 @@ jobs:
           images: ${{ steps.string.outputs.lowercase }}
           tag-custom: latest
           tag-semver: |
-            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{version}}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
