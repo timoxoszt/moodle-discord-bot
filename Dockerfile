@@ -15,7 +15,7 @@ RUN npm install
 
 # change timezone
 RUN apk add --no-cache tzdata
-ENV TZ=Europe/Paris
+ENV TZ=Asia/Ho_Chi_Minh
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 CMD [ "node", "main.js" ]
