@@ -6,10 +6,10 @@ Discord bot for moodle
 ## Available commands
 
 - `/help`: See a help page listing all available commands. Dynamically generated.
-- `/mois`: See all upcoming events for the next month.
-- `/semaine`: See all upcoming events for the next week
+- `/thang`: See all upcoming events for the next month.
+- `/tuan`: See all upcoming events for the next week
 
-<img src="img/moodisc_example.png" alt="example">
+![image](https://user-images.githubusercontent.com/75104235/230538327-c7403582-40a5-44cc-9f6a-7c813227b931.png)
 
 ## Setup
 
@@ -22,8 +22,8 @@ There are 2 options for deploying moodisc:
 
 First, clone this repository, `cd` into it and install dependencies
 ```bash
-git clone https://github.com.finxol/moodisc
-cd moodisc
+https://github.com/timoxoszt/moodle-discord-bot
+cd moodle-discord-bot
 npm install
 ```
 Then get your discord and moodle tokens, and add them to your environnement
@@ -31,6 +31,9 @@ Then get your discord and moodle tokens, and add them to your environnement
 export DISCORD_TOKEN=<your discord token here>
 export MOODLE_TOKEN=<your moodle token here>
 export MOODLE_ID=<your moodle account id here>
+export GUILD_ID=<your discord server id here>
+export CLIENT_ID=<your discord bot id here>
+export MOODLE_URL=<your moodle url here> # example: https://courses.uit.edu.vn/
 ```
 
 You may also change the url for your moodle website in `getEvents.js`.
@@ -58,20 +61,18 @@ Create a file called `.env` in which you will enter your discord and moodle deta
 DISCORD_TOKEN=<your discord token here>
 MOODLE_TOKEN=<your moodle token here>
 MOODLE_ID=<your moodle account id here>
+GUILD_ID=<your discord server id here>
+CLIENT_ID=<your discord bot id here>
+MOODLE_URL=<your moodle url here> # example: https://courses.uit.edu.vn/
 ```
-
-Then you can simply use the npm scripts provided to build and run with podman
-
+Start docker container
 ```bash
-npm run docker
+docker compose up -d --build
 ```
-
-*You can also only build with `npm run docker:build` or only run with `npm run docker:run`.*
-
-Once the build and run processes have finished, check everything is running smoothly with `podman ps`.
-You should get an output like this:
-
-```bash
-CONTAINER ID  IMAGE                     COMMAND      CREATED       STATUS             PORTS       NAMES
-b5d7fbde9ab2  localhost/moodisc:latest  npm run dev  1 minute ago  Up 1 minute ago                moodisc
-```
+### Get moodle token and id
+- Only UIT moodle
+1. Truy cập https://courses.uit.edu.vn/calendar/export.php
+2. Chọn `Các sự kiện được xuất` và `Khoảng thời gian`
+![image](https://user-images.githubusercontent.com/75104235/230539058-d5d0bb38-3990-4ec1-a337-5229375e437d.png)
+3. Chọn <b>Xuất</b> và theo dõi phần `Network` tại `dev tool`
+![image](https://user-images.githubusercontent.com/75104235/230539605-87d3ee21-0d8a-4bf5-b6f6-37c539922dac.png)
