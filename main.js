@@ -5,20 +5,21 @@ import {Client, Intents, MessageEmbed} from 'discord.js';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-const GUILD_ID = "927943017468416030";
-const CLIENT_ID = "928685167034376233";
+const GUILD_ID = process.env.GUILD_ID;
+const CLIENT_ID = process.env.CLIENT_ID;
 const TOKEN = process.env.DISCORD_TOKEN;
+const MOODLE_URL = process.env.MOODLE_URL;
 
 const commands = [
     {
         name: 'help',
-        description: "Voir la page d'aide"
+        description: "Hướng dẫn sử dụng"
     }, {
-        name: 'mois',
-        description: 'Voir les rendus pour le mois'
+        name: 'thang',
+        description: 'Deadline trong tháng'
     }, {
-        name: 'semaine',
-        description: 'Voir les rendus pour la semaine'
+        name: 'tuan',
+        description: 'Deadline trong tuần'
     }
 ];
 
@@ -41,9 +42,9 @@ async function createEventsEmbeds(timeframe) {
 
     return new MessageEmbed()
         .setColor('#f58820')
-        .setTitle(`Rendus pour la semaine ${calendar.week_number()}`)
-        .setURL('https://moodle.univ-ubs.fr/')
-        .setThumbnail('https://ozna.me/moodle_logo.png')
+        .setTitle(`Deadline trong tuần ${calendar.week_number()}`)
+        .setURL(MOODLE_URL)
+        .setThumbnail(MOODLE_URL.concat('pluginfile.php/1/core_admin/logo/0x150/1667485444/logo-header.png'))
         .addFields(calendar.events)
         .setTimestamp();
 }
@@ -71,21 +72,21 @@ client.on('interactionCreate', async interaction => {
             })
             res = new MessageEmbed()
                 .setColor('#f58820')
-                .setTitle("Page d'aide")
-                .setDescription(`Vous avez ${commands.length} commandes à votre disposition :`)
-                .setURL('https://github.com/finxol/moodisc')
-                .setThumbnail('https://ozna.me/moodle_logo.png')
+                .setTitle("Trang hỗ trợ")
+                .setDescription(`Có ${commands.length} lệnh đang được hỗ trợ :`)
+                .setURL('https://github.com/timoxoszt/moodle-discord-bot')
+                .setThumbnail(MOODLE_URL.concat('pluginfile.php/1/core_admin/logo/0x150/1667485444/logo-header.png'))
                 .addFields(msg)
                 .setTimestamp();
             await interaction.reply({ embeds: [res] });
             break;
 
-        case "mois":
+        case "thang":
             res = await createEventsEmbeds("month");
             await interaction.reply({ embeds: [res] });
             break;
 
-        case "semaine":
+        case "tuan":
             res = await createEventsEmbeds("week");
             await interaction.reply({ embeds: [res] });
             break;
