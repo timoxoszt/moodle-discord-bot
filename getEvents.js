@@ -12,6 +12,7 @@ class Calendar {
      * @type {string}
      */
     #MOODLE_TOKEN = process.env.MOODLE_TOKEN;
+    MOODLE_URL = process.env.MOODLE_URL;
     /**
      * Id of the Moodle account to use
      * @type {string}
@@ -21,7 +22,7 @@ class Calendar {
      * Url for the calendar export on Moodle
      * @type {string}
      */
-    #url = `https://moodle.univ-ubs.fr/calendar/export_execute.php?userid=${this.#MOODLE_ID}&authtoken=${this.#MOODLE_TOKEN}&preset_what=all&preset_time=recentupcoming`;
+    #url = `${this.MOODLE_URL}calendar/export_execute.php?userid=${this.#MOODLE_ID}&authtoken=${this.#MOODLE_TOKEN}&preset_what=all&preset_time=recentupcoming`;
 
     constructor() {
     }
@@ -31,7 +32,7 @@ class Calendar {
      * @returns {{inline: boolean, name: string, value: string}|*} list containing the events, formatted for use in a discord embed
      */
     get events() {
-        return this.empty ? [{name: "Rendu", value: "Pas de rendus pour cette semaine", inline: true}] : this.#events;
+        return this.empty ? [{name: "Kết quả", value: "Không có deadline trong tuần này", inline: true}] : this.#events;
     }
 
     /**
@@ -94,8 +95,8 @@ class Calendar {
 
             if (now < d && d < then) { // Filter out passed events and future events
                 let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                let date = d.toLocaleDateString('fr-FR', options);
-                let time = d.toLocaleTimeString('fr-FR').split(':');
+                let date = d.toLocaleDateString('vi-VN', options);
+                let time = d.toLocaleTimeString('vi-VN').split(':');
                 this.#events.push({
                     name: eventData.jCal["1"]["8"]["3"] === undefined ? "R1.0x - xx" : eventData.jCal["1"]["8"]["3"],
                     value: `*${event.summary}*\n**${date} ${time[0]}:${time[1]}**`,
